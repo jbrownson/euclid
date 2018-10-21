@@ -16,6 +16,7 @@ use num::One;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use core::cmp::Ordering;
+use core::hash::{Hash, Hasher};
 use core::ops::{Add, Div, Mul, Neg, Sub};
 use core::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 use core::marker::PhantomData;
@@ -44,6 +45,12 @@ impl<T: Clone, Unit> Clone for Length<T, Unit> {
 }
 
 impl<T: Copy, Unit> Copy for Length<T, Unit> {}
+
+impl<T: Hash, Unit> Hash for Length<T, Unit> {
+    fn hash<H: Hasher>(&self, h: &mut H) {
+        self.0.hash(h);
+    }
+}
 
 #[cfg(feature = "serde")]
 impl<'de, Unit, T> Deserialize<'de> for Length<T, Unit>
